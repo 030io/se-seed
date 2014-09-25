@@ -87,3 +87,55 @@ STEP.02
     )
     
 到目前为止，跑一下单元测试 python setup.py test（或者在 IDE 上能够自动识别这个单元测试），现在只剩下 AssertionError。也就是接口设计初步完成，接下来就可以填充具体业务了。
+
+STEP.03
+---------
+
+现在来填充具体业务。目前所有的业务功能都集中在 jbmongo/\_\_init\_\_.py，首先把这部分功能分成两个部分 jbmongo/dbcontext.py 和 jbmongo/basedocument.py。然后我们把 jbmongo/\_\_init\_\_.py 重构成只有一行：
+
+    from .dbcontext import DBContext
+    
+接下来我们只需要集中在 dbcontext 和 basedocument 之中进行重构，把具体业务实现。实现后执行测试：
+
+    $ python3 setup.py test
+    
+    running test
+    Checking .pth file support in .
+    /usr/bin/python3 -E -c pass
+    Searching for pymongo
+    Reading http://pypi.python.org/simple/pymongo/
+    Best match: pymongo 2.7.2
+    Downloading https://pypi.python.org/packages/source/p/pymongo/pymongo-2.7.2.tar.gz#md5=bbd229fe0ff43ee130eed9ffa9db7353
+    Processing pymongo-2.7.2.tar.gz
+    Writing /tmp/easy_install-c0hhmc/pymongo-2.7.2/setup.cfg
+    Running pymongo-2.7.2/setup.py -q bdist_egg --dist-dir /tmp/easy_install-c0hhmc/pymongo-2.7.2/egg-dist-tmp-w52cia
+    zip_safe flag not set; analyzing archive contents...
+    bson.__pycache__._cbson.cpython-32: module references __file__
+    pymongo.__pycache__._cmessage.cpython-32: module references __file__        # 自动安装依赖，无需额外处理
+    
+    running egg_info
+    creating se_seed.egg-info
+    writing requirements to se_seed.egg-info/requires.txt
+    writing dependency_links to se_seed.egg-info/dependency_links.txt
+    writing top-level names to se_seed.egg-info/top_level.txt
+    writing se_seed.egg-info/PKG-INFO
+    writing manifest file 'se_seed.egg-info/SOURCES.txt'
+    reading manifest file 'se_seed.egg-info/SOURCES.txt'
+    writing manifest file 'se_seed.egg-info/SOURCES.txt'
+    running build_ext
+    test_coll_definition (tests.test_jbm.JBMongoTestCase) ... ok        # 测试清单
+    
+    ----------------------------------------------------------------------
+    Ran 1 test in 0.004s        # 这里表示成功跑了 1 个测试函数，全部测试均 Pass
+    
+    OK
+    
+如果 setuptools 生成的中间文件太多，可以使用下面命令清除：
+
+    $ python setup.py clean
+
+至此我们已完成一个开发用的框架，其特点如下：
+
+* 测试能在 IDE（PyDev 和 PyCharm）中直接识别运行
+* 我们以使用者、测试者的角度，自上而下的设计程序接口
+* 测试脚本能帮助接口在开发过程中不会发生“退化”
