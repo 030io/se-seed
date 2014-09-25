@@ -139,3 +139,40 @@ STEP.03
 * 测试能在 IDE（PyDev 和 PyCharm）中直接识别运行
 * 我们以使用者、测试者的角度，自上而下的设计程序接口
 * 测试脚本能帮助接口在开发过程中不会发生“退化”
+
+STEP.04
+---------
+
+接下来我们就可以迭代 STEP.02，增加测试的脚本来设计新的 feature。如我们增加一个测试函数：
+
+    class JBMongoTestCase(TestCase):
+        ......
+        
+        def test_find(self):
+            dbc = self._dbc
+            base_document = dbc.base_document()
+    
+            class Person(base_document):
+                pass
+            class MassageStick(base_document):
+                pass
+    
+            _bird = random.randint(1, 1000000)
+            for p in (Person(bird_index=_bird, pain=True) for i in range(10)):
+                p.save()
+            for s in (MassageStick(comfort_index=_bird) for i in range(20)):
+                s.save()
+    
+            persons = Person.find(dict(bird_index=_bird))
+            for p in persons:
+                self.assertEqual(p.bird_index, _bird)
+                self.assertEqual(p.pain, True)
+                
+            ........
+            
+通过不断迭代 设计 — 单元测试(STEP.02) — 业务代码(STEP.03) 的过程，完成你想要的系统。 
+
+End for the beginning
+----------
+
+项目之路从此就开始。

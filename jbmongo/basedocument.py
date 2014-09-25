@@ -22,3 +22,8 @@ class BaseDocument(dict):
     @classmethod
     def find_one(cls, *args, **kwargs):
         return cls(cls.get_collection().find_one(*args, **kwargs))
+
+    @classmethod
+    def find(cls, *args, **kwargs):
+        return [cls(obj) for obj in cls.get_collection().find(*args, **kwargs)]
+
