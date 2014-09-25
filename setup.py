@@ -7,4 +7,8 @@ setup(
     name='se-seed',
     author='Chinfeng Chung',
     test_suite = 'tests',
+
+    install_requires=[
+        'pymongo',
+    ],
 )
