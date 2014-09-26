@@ -176,3 +176,34 @@ End for the beginning
 ----------
 
 项目之路从此就开始。
+
+Other stuff
+----------
+
+有人问到，上述的测试只能对 native coding，如果对 web 该怎么办？正好是 Tornado 群上的朋友问到，现在用这个框架来做一份 tornado 测试模板。tests/test_sweb.py：
+
+    from tornado.testing import AsyncHTTPTestCase
+    from simpleweb import application
+    import json
+
+    class SimpleWebTestCase(AsyncHTTPTestCase):
+        def get_app(self):
+            return application      # 为测试提供一个 tornado 的应用实例
+    
+        def test_simple(self):
+             response = self.fetch('/simplejson')
+             data = json.loads(response.body.decode('utf-8'))
+             self.assertIn('name', data)
+             self.assertEqual(data['name'], 'Chinfeng Chung')
+             self.assertEqual(data['characteristics'], 'handsome')
+             
+然后我们就可以开始编写 tornado 的 app，使得 /simplejson 能够让上述测试通过：
+
+    class SimpleJsonHandler(tornado.web.RequestHandler):
+        def get(self):
+            self.write(dict(
+                name='Chinfeng Chung',
+                characteristics='handsome',
+            ))
+
+现在可以开始迭代通过测试进行 rest api 设计的开发模式了。

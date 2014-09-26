@@ -9,6 +9,6 @@ setup(
     test_suite = 'tests',
 
     install_requires=[
-        'pymongo',
+        'pymongo', 'tornado'
     ],
 )
